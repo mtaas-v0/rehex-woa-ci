@@ -1,0 +1,66 @@
+name: MinGW Windows ARM64 CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-arm64:
+    # Use GitHub's native Windows ARM64 runner
+    runs-on: windows-11-arm
+
+    defaults:
+      run:
+        # Force all workflow steps to run inside the MSYS2 bash environment
+        shell: msys2 {0}
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup MSYS2 and ARM64 Toolchain
+        uses: msys2/setup-msys2@v2
+        with:
+          # Select the native Windows ARM64 environment
+          msystem: CLANGARM64
+          update: true
+          # Install the necessary build tools and compilers
+          install: >-
+            mingw-w64-clang-aarch64-clang
+            mingw-w64-clang-aarch64-toolchain
+            git
+            make
+            cmake
+            ninja
+            mingw-w64-clang-aarch64-jansson
+            mingw-w64-wxwidgets3.2
+            mingw-w64-capstone
+            mingw-w64-jbigkit
+            mingw-w64-libbotan
+            mingw-w64-libunistring
+            lua
+
+      - name: Verify Compiler
+        run: |
+          clang --version
+          gcc --version || true  # (Note: CLANGARM64 uses clang as the main driver)
+
+      - name: Build Project
+        run: |
+          make -f Makefile.win
+
+      # Recursive list using PowerShell (default shell on Windows runners)
+      - name: List all files recursively (PowerShell)
+        if: always()
+        run: (Get-ChildItem -Recurse -File).FullName
+
+      #debugging ci workflow
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          #name: testing-build       # The name of your downloadable zip file
+          path: ./                  # The directory or file path to upload
+          retention-days: 7            # Optional: How long to keep the files (Default: 90)
+          if-no-files-found: error     # Optional: Fails the build if 'dist' is missing
