@@ -54,6 +54,8 @@ jobs:
 
       - name: Build Project
         run: |
+          export CC=clang
+          export CXX=clang++
           make -f Makefile.win
 
       # Recursive list using PowerShell (default shell on Windows runners)
