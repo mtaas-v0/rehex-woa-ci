@@ -35,12 +35,17 @@ jobs:
             cmake
             ninja
             mingw-w64-clang-aarch64-jansson
-            mingw-w64-wxwidgets3.2
-            mingw-w64-capstone
-            mingw-w64-jbigkit
-            mingw-w64-libbotan
-            mingw-w64-libunistring
+            mingw-w64-clang-aarch64-wxwidgets3.2-msw
             lua
+            mingw-w64-clang-aarch64-capstone
+            mingw-w64-clang-aarch64-jbigkit
+            mingw-w64-clang-aarch64-libbotan
+            mingw-w64-clang-aarch64-libunistring
+
+
+      - name: pacman extra packages
+        run: |
+          echo "mingw-w64-clang-aarch64-capstone has CVE-2025-68114, CVE-2025-67873"
 
       - name: Verify Compiler
         run: |
@@ -52,9 +57,9 @@ jobs:
           make -f Makefile.win
 
       # Recursive list using PowerShell (default shell on Windows runners)
-      - name: List all files recursively (PowerShell)
+      - name: List all files recursively (Bash)
         if: always()
-        run: (Get-ChildItem -Recurse -File).FullName
+        run: find .
 
       #debugging ci workflow
       - name: Upload Build Artifacts
