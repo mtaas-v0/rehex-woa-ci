@@ -36,7 +36,7 @@ jobs:
             ninja
             mingw-w64-clang-aarch64-jansson
             mingw-w64-clang-aarch64-wxwidgets3.2-msw
-            mingw-w64-clang-aarch64-lua53
+            mingw-w64-clang-aarch64-lua
             mingw-w64-clang-aarch64-capstone
             mingw-w64-clang-aarch64-jbigkit
             mingw-w64-clang-aarch64-libbotan
